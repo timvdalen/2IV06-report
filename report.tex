@@ -1,0 +1,59 @@
+\documentclass[11pt,a4paper,twocolumn]{article}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+\geometry{
+	includeheadfoot,
+	margin=2.54cm
+}
+
+\graphicspath{{img/}}
+
+\title{
+	{\huge Project\\ \emph{Parameter-based Island Terrain Generation}}\\
+	{\large For 2IV06 - Visual Computing Project}
+}
+\author{
+	T.M. van Dalen \\
+	C.J.P van Dueren den Hollander\\
+	{\texttt\{t.m.v.dalen,c.j.p.v.dueren.den.hollander\}}@student.tue.nl
+}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\input{abstract}
+	
+	\section{Introduction}
+	\label{sec:intro}
+	\input{sections/intro}
+	
+	\section{Analysis}
+	\label{sec:analysis}
+	\input{sections/analysis}
+	
+	\section{Design decisions}
+	\label{sec:choices}
+	\input{sections/choices}
+	
+	\section{Discussion}
+	\label{sec:discussion}
+	\input{sections/discussion}
+	
+	\section{Results}
+	\label{sec:results}
+	\input{sections/results}
+	
+	\section{Conclusion}
+	\label{sec:conclusion}
+	\input{sections/conclusion}
+
+	\bibliographystyle{plain}
+	\bibliography{bibliography}
+\end{document}
