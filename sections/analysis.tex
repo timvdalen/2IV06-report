@@ -1,5 +1,39 @@
 %analysis and solution: mathematics/algorithms/system design
 
+\subsection{Generation}
+
+The terrain generation happens in five stages:
+
+\begin{enumerate}
+	\item Shaping island
+	\item Placing points
+	\item Building graph
+	\item Adding features
+	\item Adding special edges
+\end{enumerate}
+
+\paragraph{Shaping island}
+
+The island shape is a function that determines which of the polygons in the graph are part of the island and which are water.
+
+\paragraph{Placing points}
+
+In this stage, the points that make up the center of the polygons are selected.
+We currently have a selector that returns random points, and one that returns points that result in a hexagonal voronoi diagram.
+
+\paragraph{Building graph}
+
+Next, we use the selected points to build the data structures that represent the map.
+We do this by constructing a Voronoi diagram (using Fortune's algorithm) and a Delaunay triangulation and creating polygons from that.
+
+\paragraph{Adding features}
+
+In this step, we assign elevations, moisture and biomes.
+
+\paragraph{Building edges}
+
+Finally, we add roads and watersheds.
+
 \subsection{System design}
 
 Using wxWidgets we set up a window with the necessary controls to modify parameters with which to generate maps and export them. Within this window we will be using OpenGL to visualize the generation process and provide the user with an idea of what the map might look like in the viewer application.
