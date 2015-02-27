@@ -1,1 +1,13 @@
 %motivation of choices made
+
+\subsection{Libraries}
+We intend to make both a map generation and viewing program and will be using several libraries to provide the framework for our project.
+
+\subsubsection{wxWidgets}
+To provide the required functionality in the map generator specifically we decided to use the wxWidgets toolkit. This allows us to work towards a cross-platform solution and provides an easy way of implementing the necessary graphical user interface. To minimize the number of libraries are required to build both of the programs we intend to develop, we will also use wxWidgets to handle window setup for the map viewer. Even though it does not require most of the functionality provided by the library.
+
+\subsubsection{OpenGL 4}
+We wanted to make an effort to work with one of the most recent version of OpenGL. Partly because we were allready intending to write our own shaders to be able to have some more control over the eventual look of the generated landscape. The newer versions also provide some interesting types of shaders which may or may not be useful. Geometry and Tesselation shaders can actually alter the provided vertices which is interesting, but the downside is that we are trying to generate our maps before use instead of right before they are being shown to the user.
+
+\subsubsection{Glew}
+The wxGLCanvas provided by wxWidgets alone is not enough to be able to use our custom shaders. We will be using glew to take care of shader compilation and set up other advanced OpenGL features.
