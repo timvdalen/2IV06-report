@@ -1,38 +1,106 @@
 %analysis and solution: mathematics/algorithms/system design
 
+\subsection{Data structures}
+
+We call the final generated terrain a \textbf{Map}.
+A Map is a collection of \textbf{Center}s, \textbf{Corner}s and \textbf{Edge}s.
+
+\paragraph{Center} has the following properties:
+
+\begin{itemize}
+	\item Vec2 point
+	\item bool water
+	\item bool ocean
+	\item bool coast
+	\item bool border
+	\item float elevation
+	\item float moisture
+	\item Biome biome
+	\item Center[] neighbours
+	\item Edge[] borders
+	\item Corner[] corners
+\end{itemize}
+
+\paragraph{Corner} has the following properties:
+
+\begin{itemize}
+	\item Vec2 point
+	\item bool water
+	\item bool ocean
+	\item bool coast
+	\item bool border
+	\item float elevation
+	\item float moisture
+	\item int river
+	\item int watershed_size
+	\item Corner downslope
+	\item Corner watershed
+	\item Center[] touches
+	\item Edge[] protrudes
+	\item Corner[] adjacent
+\end{itemize}
+
+\paragraph{Edge} has the following properties:
+
+\begin{itemize}
+	\item Center delaunay0
+	\item Center delaunay1
+	\item Corner voronoi0
+	\item Corner voronoi1
+	\item int river
+	\item Vec2 midway_point
+\end{itemize}
+
 \subsection{Generation}
 
-The terrain generation happens in five stages:
+The terrain generation happens in the following stages:
 
 \begin{enumerate}
-	\item Shaping island
 	\item Placing points
 	\item Building graph
-	\item Adding features
-	\item Adding special edges
+	\item Shaping island
+	\item Assigning elevations
+	\item Assigning moisture and rivers
+	\item Assigning biomes
 \end{enumerate}
-
-\paragraph{Shaping island}
-
-The island shape is a function that determines which of the polygons in the graph are part of the island and which are water.
 
 \paragraph{Placing points}
 
 In this stage, the points that make up the center of the polygons are selected.
-We currently have a selector that returns random points, and one that returns points that result in a hexagonal voronoi diagram.
+We currently have a selector that returns random points, one that uses poisson trials for better randomness, one that returns points that result in a hexagonal voronoi diagram and one that results in a grid-like voronoi diagram.
+
+The selected points become the centers of the map.
 
 \paragraph{Building graph}
 
 Next, we use the selected points to build the data structures that represent the map.
 We do this by constructing a Voronoi diagram (using Fortune's algorithm) and a Delaunay triangulation and creating polygons from that.
 
-\paragraph{Adding features}
+All nodes in the Voronoi diagram become corners, all edges in the Voronoi diagram, together with their dual edge in the Delaunay triangulation, are saved as edges in the map.
 
-In this step, we assign elevations, moisture and biomes.
+\paragraph{Shaping island}
 
-\paragraph{Building edges}
+The island shape is a function that determines which of the centers in the map are part of the island and which are water.
 
-Finally, we add roads and watersheds.
+\paragraph{Assigning elevations}
+
+In the elevations step, we first assign elevations to corners by going from the ocean inwards, increasing the elevation by 1 whenever we move to a new rank.
+Then, we redistribute the elevations by sorting all corners on elevation, and evenly distributing elevations from 0 to 1 among them.
+Finally, we set the elevation of each center to the average of its corners.
+
+\paragraph{Assigning moisture and rivers}
+
+First, we calculate the corner that is downslope for each corner in the map.
+Then, we use this to calculate watersheds.
+After that, we randomly select a number of springs on the map, where we start a river.
+From each spring, we follow the watershed corners until we reach the ocean.
+
+Then, we assign moisture to each corner based on the distance to a river or a body of water and we redistribute moisture like elevation.
+Finally, we set the moisture of each center to the average of its corners.
+
+\paragraph{Assigning biomes}
+
+Finally, we use the moisture and elevation properties of each center to assign a biome.
 
 \subsection{System design}
 
