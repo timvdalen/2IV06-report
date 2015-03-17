@@ -71,6 +71,8 @@ We currently have a selector that returns random points, one that uses poisson t
 
 The selected points become the centers of the map.
 
+Figure~\ref{fig:algo:points} shows an example of selected points.
+
 \paragraph{Building graph}
 
 Next, we use the selected points to build the data structures that represent the map.
@@ -78,15 +80,21 @@ We do this by constructing a Voronoi diagram (using Fortune's algorithm) and a D
 
 All nodes in the Voronoi diagram become corners, all edges in the Voronoi diagram, together with their dual edge in the Delaunay triangulation, are saved as edges in the map.
 
+Figure~\ref{fig:algo:voronoi} shows an example of a generated Voronoi diagram, Figure~\ref{fig:algo:delaunay} gives the resulting Delaunay triangulation.
+
 \paragraph{Shaping island}
 
 The island shape is a function that determines which of the centers in the map are part of the island and which are water.
+
+In Figure~\ref{fig:algo:polygons}, an example island shape is shown.
 
 \paragraph{Assigning elevations}
 
 In the elevations step, we first assign elevations to corners by going from the ocean inwards, increasing the elevation by 1 whenever we move to a new rank.
 Then, we redistribute the elevations by sorting all corners on elevation, and evenly distributing elevations from 0 to 1 among them.
 Finally, we set the elevation of each center to the average of its corners.
+
+Figure~\ref{fig:algo:elevation} gives an example of elevations.
 
 \paragraph{Assigning moisture and rivers}
 
@@ -101,6 +109,43 @@ Finally, we set the moisture of each center to the average of its corners.
 \paragraph{Assigning biomes}
 
 Finally, we use the moisture and elevation properties of each center to assign a biome.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{points}
+	\caption{Selecting points}
+	\label{fig:algo:points}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{voronoi}
+	\caption{Building a Voronoi diagram}
+	\label{fig:algo:voronoi}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{delaunay}
+	\caption{Delaunay triangulation}
+	\label{fig:algo:delaunay}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{polygons}
+	\caption{Determining island shape}
+	\label{fig:algo:polygons}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{elevation}
+	\caption{Setting elevation}
+	\label{fig:algo:elevation}
+\end{figure}
+
+%TODO: Similar images for the next steps
 
 \subsection{System design}
 
