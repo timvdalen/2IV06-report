@@ -178,3 +178,13 @@ We want to give the user a good idea of what is being generated and how this is 
 Whenever we will be rendering anything we will be using appropriate shaders. For now we will be using a pair of relatively simple vertex and fragment shaders to be extended where needed. To start with they take into account the projection, position of the camera and model matrix for whichever object is being drawn. Furthermore each vertex has an associated position, normal and color. These are more or less minimal requirements to render anything. They also consider a single light source to add some dynamics to the map preview. 
 
 Even with these simple shaders we can observe the effect of the calculations of the fragment shader in that eventual lighting dependent output colours are determined not per vertex but per pixel. This is one of the more obvious advantages of using our custom shaders.
+
+\subsection{Input/output}
+
+Since we have a separate generator and viewer, we want the generator to be able to export maps to the disk and the viewer to be able to import.
+
+To do this, we convert the Center, Corner and Edge objects to simple \texttt{struct}s, replacing pointers with indices.
+Then, we store all relationships between centers, corner and edges to pairs of indices.
+We store these structs in arrays, and write them directly to the disk.
+
+When importing, we read from the disk into these arrays and use the indices to recreate the Center, Corner and Edge objects.
