@@ -272,6 +272,42 @@ Whenever we will be rendering anything we will be using appropriate shaders. For
 
 Even with these simple shaders we can observe the effect of the calculations of the fragment shader in that eventual lighting dependent output colours are determined not per vertex but per pixel. This is one of the more obvious advantages of using our custom shaders.
 
+The vertex shader simply takes the attributes such as position, normal and color or uv coordinate, determines the position on screen and interpolates the attributes for each pixel in between the vertices. The fragment shader is where things get interesting. Below~\ref{alg:point} is an example of our initial shader configuration. Some of the constants used should be implemented as uniforms to be adjustable per object to be drawn.
+ 
+\begin{algo*}
+\begin{sourcecode}
+\textit{//Light properties}
+LightPosition = vec3(50,50,10)
+LightColor = vec3(1,0.8f,0.8f)
+LightPower = 1500.0f
+ 
+\algorithm{fragment($fPosition, fNormal, fColor, eyeVector, lightVector, normalVector$)}
+\textit{//Material properties}
+DiffuseColor = color
+AmbientColor = 0.1f * color
+SpecularColor = vec3(0.3,0.3,0.3)
+\vspace{0.2cm}
+\textit{//Angle between light and face}
+n = normalize($normalVector$)
+l = normalize($lightVector$)
+cosTheta = clamp( dot( $n, l$ )$, 0, 1 $ )
+\vspace{0.2cm}
+\textit{//Angle between viewer and reflected light}
+E = normalize($eyeVector$);
+R = reflect($-l,n$);
+cosAlpha = clamp( dot( $E,R$ )$, 0, 1$ );
+\vspace{0.2cm}
+\textit{//Final color determined taking all factors into account}
+d = length( $lightPosition - fPosition$ )
+brightness = LightPower / d$^2$
+\return brightness * (AmbientColor + DiffuseColor * cosTheta + SpecularColor * cosAlpha)
+\vspace{0.2cm}
+\qend
+\end{sourcecode}
+        \caption{The fragment shader's method to return the final color}
+        \label{alg:frag}
+\end{algo*}
+
 \subsection{Input/output}
 
 Since we have a separate generator and viewer, we want the generator to be able to export maps to the disk and the viewer to be able to import.
