@@ -73,6 +73,24 @@ The selected points become the centers of the map.
 
 Figure~\ref{fig:algo:points} shows an example of selected points.
 
+Algorithm~\ref{alg:point} gives pseudo-code for the point selector that results in a grid-like structure.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{SquarePointSelector($width, height, n$)}
+$P = \emptyset$
+\for{$i = 0; i < \sqrt{n}; i++$}
+	\for{$i = 0; i < \sqrt{n}; i++$}
+		$P = P \cup \left<\frac{0.5 + i}{n} width, \frac{0.5 + j}{n} height\right>$
+	|
+|
+\return P
+\qend
+\end{sourcecode}
+	\caption{Point selection algorithm}
+	\label{alg:point}
+\end{algo*}
+
 \paragraph{Building graph}
 
 Next, we use the selected points to build the data structures that represent the map.

@@ -6,6 +6,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{hyperref}
+\usepackage[T1]{fontenc}
 
 \geometry{
 	includeheadfoot,
@@ -13,6 +14,11 @@
 }
 
 \graphicspath{{img/}}
+
+\input{include/algoritme}
+
+\newfloat{algo}{thp}{lop}
+\floatname{algo}{Algorithm}
 
 \title{
 	{\huge Project\\ \emph{Parameter-based Island Terrain Generation}}\\
