@@ -87,7 +87,7 @@ $P = \emptyset$
 \return P
 \qend
 \end{sourcecode}
-	\caption{Point selection algorithm}
+	\caption{Point selection}
 	\label{alg:point}
 \end{algo*}
 
@@ -98,13 +98,48 @@ We do this by constructing a Voronoi diagram (using Fortune's algorithm) and a D
 
 All nodes in the Voronoi diagram become corners, all edges in the Voronoi diagram, together with their dual edge in the Delaunay triangulation, are saved as edges in the map.
 
+Pseudo-code for this can be found in Algorithm~\ref{alg:graph}
+
 Figure~\ref{fig:algo:voronoi} shows an example of a generated Voronoi diagram, Figure~\ref{fig:algo:delaunay} gives the resulting Delaunay triangulation.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{BuildGraph($P$)}
+$V, D =$ \textsc{GenerateVoronoi}($P$)
+$centers = $\textsc{MakeCenters}($P$)
+\for{$e \in V,D$}
+	$edge = $\{
+		\textsc{GetCenter}($centers, e.delaunay0$),
+		\textsc{GetCenter}($centers, e.delaunay1$),
+		\textsc{MakeCorner}($e.voronoi0$),
+		\textsc{MakeCorner}($e.voronoi1$)
+	\}
+	\textsc{SetupRelations}($edge$)
+|
+\return centers
+\qend
+\end{sourcecode}
+	\caption{Graph building}
+	\label{alg:graph}
+\end{algo*}
 
 \paragraph{Shaping island}
 
 The island shape is a function that determines which of the centers in the map are part of the island and which are water.
 
 In Figure~\ref{fig:algo:polygons}, an example island shape is shown.
+
+Algorithm~\ref{alg:shape} gives an example of a map shaper that results in a round island.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{RoundMapShaper($p$)}
+\return $p.x^2 + p.y^2 < 1$
+\qend
+\end{sourcecode}
+	\caption{Shaping the island}
+	\label{alg:shape}
+\end{algo*}
 
 \paragraph{Assigning elevations}
 
@@ -113,6 +148,22 @@ Then, we redistribute the elevations by sorting all corners on elevation, and ev
 Finally, we set the elevation of each center to the average of its corners.
 
 Figure~\ref{fig:algo:elevation} gives an example of elevations.
+
+Algorithm~\ref{alg:elevation} gives an overview of the elevation assignment.
+Pseudo-code for its components will follow.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{AssignElevations($shaper$)}
+\textsc{AssignElevationsCorner}($shaper$)
+\textsc{AssignElevationsCoastAndLand}()
+\textsc{AssignElevationsRedistribute}()
+\textsc{AssignElevationsPolygons}()
+\qend
+\end{sourcecode}
+	\caption{Elevation overview}
+	\label{alg:elevation}
+\end{algo*}
 
 \paragraph{Assigning moisture and rivers}
 
@@ -124,9 +175,51 @@ From each spring, we follow the watershed corners until we reach the ocean.
 Then, we assign moisture to each corner based on the distance to a river or a body of water and we redistribute moisture like elevation.
 Finally, we set the moisture of each center to the average of its corners.
 
+Algorithm~\ref{alg:moisture} gives an overview of the moisture assignment.
+Pseudo-code for its components will follow.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{AssignMoisture()}
+\textsc{calculateDownslopes}()
+\textsc{calculateWatersheds}()
+\textsc{createRivers}()
+\textsc{assignCornerMoisture}()
+\textsc{assignMoistureRedistribute}()
+\textsc{assignPolygonMoisture}()
+\qend
+\end{sourcecode}
+	\caption{Moisture overview}
+	\label{alg:moisture}
+\end{algo*}
+
 \paragraph{Assigning biomes}
 
 Finally, we use the moisture and elevation properties of each center to assign a biome.
+
+Algorithm~\ref{alg:biome} gives an impression of how this could happen, the real implementation is much more detailed.
+
+\begin{algo*}
+\begin{sourcecode}
+\algorithm{getBiome($center$)}
+\qif{$center.ocean$}
+	\return \texttt{OCEAN}
+\qelse
+	\qif{$center.moisture > 0.7$}
+		\return \texttt{SWAMP}
+	\qelse
+		\qif{$center.elevation < 0.5$}
+			\return \texttt{PLAINS}
+		\qelse
+			\return \texttt{ROCK}
+		|
+	|
+|
+\qend
+\end{sourcecode}
+	\caption{Biome assignment}
+	\label{alg:biome}
+\end{algo*}
 
 \begin{figure}
 	\centering
