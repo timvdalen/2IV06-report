@@ -276,53 +276,7 @@ Each step, they move their position to the next target.
 
 \subsection{System design}
 
-Using wxWidgets we set up a window with the necessary controls to modify parameters with which to generate maps and export them. Within this window we will be using OpenGL to visualize the generation process and provide the user with an idea of what the map might look like in the viewer application.
-
-\subsubsection{Preview rendering}
-
-We want to give the user a good idea of what is being generated and how this is being done. This will highlight the workings of the generation process and allow the user to intuitively judge wether he or she should adjust the parameters.
-
-\paragraph{Shaders}
-
-Whenever we will be rendering anything we will be using appropriate shaders. For now we will be using a pair of relatively simple vertex and fragment shaders to be extended where needed. To start with they take into account the projection, position of the camera and model matrix for whichever object is being drawn. Furthermore each vertex has an associated position, normal and color. These are more or less minimal requirements to render anything. They also consider a single light source to add some dynamics to the map preview. 
-
-Even with these simple shaders we can observe the effect of the calculations of the fragment shader in that eventual lighting dependent output colours are determined not per vertex but per pixel. This is one of the more obvious advantages of using our custom shaders.
-
-The vertex shader simply takes the attributes such as position, normal and color or uv coordinate, determines the position on screen and interpolates the attributes for each pixel in between the vertices. The fragment shader is where things get interesting. Below~\ref{alg:point} is an example of our initial shader configuration. Some of the constants used should be implemented as uniforms to be adjustable per object to be drawn.
- 
-\begin{algo*}
-\begin{sourcecode}
-\textit{//Light properties}
-LightPosition = vec3(50,50,10)
-LightColor = vec3(1,0.8f,0.8f)
-LightPower = 1500.0f
- 
-\algorithm{fragment($fPosition, fNormal, fColor, eyeVector, lightVector, normalVector$)}
-\textit{//Material properties}
-DiffuseColor = color
-AmbientColor = 0.1f * color
-SpecularColor = vec3(0.3,0.3,0.3)
-\vspace{0.2cm}
-\textit{//Angle between light and face}
-n = normalize($normalVector$)
-l = normalize($lightVector$)
-cosTheta = clamp( dot( $n, l$ )$, 0, 1 $ )
-\vspace{0.2cm}
-\textit{//Angle between viewer and reflected light}
-E = normalize($eyeVector$);
-R = reflect($-l,n$);
-cosAlpha = clamp( dot( $E,R$ )$, 0, 1$ );
-\vspace{0.2cm}
-\textit{//Final color determined taking all factors into account}
-d = length( $lightPosition - fPosition$ )
-brightness = LightPower / d$^2$
-\return brightness * (AmbientColor + DiffuseColor * cosTheta + SpecularColor * cosAlpha)
-\vspace{0.2cm}
-\qend
-\end{sourcecode}
-        \caption{The fragment shader's method to return the final color}
-        \label{alg:frag}
-\end{algo*}
+Appendix~\ref{appendix:system} describes the choices we made for the implementation of the system.
 
 \subsection{Input/output}
 
