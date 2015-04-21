@@ -259,6 +259,21 @@ Both approaches run into trouble ~\ref{riverproblem3} when the generated terrain
 	\label{riverproblem3}
 \end{figure}
 
+\subsection{Vehicles}
+
+We implemented Braitenberg-like vehicles to interact with the terrain.
+An important difference between Braitenberg vehicles and our model for vehicles, however, is the way sensor data is obtained.
+
+While Braitenberg vehicles in virtual environments usually try to emulate real-world sensors (for instance by implementing a light sensor that uses ray casting), our vehicles receive a reference to the part of the terrain they are currently on.
+
+In general, our vehicles have a position, a target and a way of determining a next target.
+More specifically, we implemented vehicles that are attracted to a certain terrain property.
+
+Initially, and every time their position is close enough to their current target,
+these vehicles use their 'sensors' to determine the value of the property they are attracted to in the neighbouring terrain corners, and set their target to the one with the highest value.
+
+Each step, they move their position to the next target.
+
 \subsection{System design}
 
 Using wxWidgets we set up a window with the necessary controls to modify parameters with which to generate maps and export them. Within this window we will be using OpenGL to visualize the generation process and provide the user with an idea of what the map might look like in the viewer application.
