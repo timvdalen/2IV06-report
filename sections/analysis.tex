@@ -57,7 +57,7 @@ Pseudo-code for this can be found in Algorithm~\ref{alg:graph}
 
 Figure~\ref{fig:algo:voronoi} shows an example of a generated Voronoi diagram, Figure~\ref{fig:algo:delaunay} gives the resulting Delaunay triangulation.
 
-\begin{algo*}
+\begin{algo}[H]
 \begin{sourcecode}
 \algorithm{BuildGraph($P$)}
 $V, D =$ \textsc{GenerateVoronoi}($P$)
@@ -76,7 +76,7 @@ $centers = $\textsc{MakeCenters}($P$)
 \end{sourcecode}
 	\caption{Graph building}
 	\label{alg:graph}
-\end{algo*}
+\end{algo}
 
 \paragraph{Shaping island}
 
@@ -86,7 +86,7 @@ In Figure~\ref{fig:algo:polygons}, an example island shape is shown.
 
 Algorithm~\ref{alg:shape} gives an example of a map shaper that results in a round island.
 
-\begin{algo*}
+\begin{algo}[H]
 \begin{sourcecode}
 \algorithm{RoundMapShaper($p$)}
 \return $p.x^2 + p.y^2 < 1$
@@ -94,7 +94,7 @@ Algorithm~\ref{alg:shape} gives an example of a map shaper that results in a rou
 \end{sourcecode}
 	\caption{Shaping the island}
 	\label{alg:shape}
-\end{algo*}
+\end{algo}
 
 \paragraph{Assigning elevations}
 
@@ -107,7 +107,7 @@ Figure~\ref{fig:algo:elevation} gives an example of elevations.
 Algorithm~\ref{alg:elevation} gives an overview of the elevation assignment.
 Pseudo-code for its components will follow.
 
-\begin{algo*}
+\begin{algo}[H]
 \begin{sourcecode}
 \algorithm{AssignElevations($shaper$)}
 \textsc{AssignElevationsCorner}($shaper$)
@@ -118,7 +118,7 @@ Pseudo-code for its components will follow.
 \end{sourcecode}
 	\caption{Elevation overview}
 	\label{alg:elevation}
-\end{algo*}
+\end{algo}
 
 \paragraph{Assigning moisture and rivers}
 
@@ -133,7 +133,7 @@ Finally, we set the moisture of each center to the average of its corners.
 Algorithm~\ref{alg:moisture} gives an overview of the moisture assignment.
 Pseudo-code for its components will follow.
 
-\begin{algo*}
+\begin{algo}[H]
 \begin{sourcecode}
 \algorithm{AssignMoisture()}
 \textsc{calculateDownslopes}()
@@ -146,7 +146,7 @@ Pseudo-code for its components will follow.
 \end{sourcecode}
 	\caption{Moisture overview}
 	\label{alg:moisture}
-\end{algo*}
+\end{algo}
 
 \paragraph{Assigning biomes}
 
@@ -154,7 +154,7 @@ Finally, we use the moisture and elevation properties of each center to assign a
 
 Algorithm~\ref{alg:biome} gives an impression of how this could happen, the real implementation is much more detailed.
 
-\begin{algo*}
+\begin{algo}[H]
 \begin{sourcecode}
 \algorithm{getBiome($center$)}
 \qif{$center.ocean$}
@@ -174,7 +174,7 @@ Algorithm~\ref{alg:biome} gives an impression of how this could happen, the real
 \end{sourcecode}
 	\caption{Biome assignment}
 	\label{alg:biome}
-\end{algo*}
+\end{algo}
 
 \begin{figure}
 	\centering
