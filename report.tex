@@ -7,6 +7,7 @@
 \usepackage{subcaption}
 \usepackage{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage[toc,page]{appendix}
 
 \geometry{
 	includeheadfoot,
@@ -59,6 +60,12 @@
 	\section{Conclusion}
 	\label{sec:conclusion}
 	\input{sections/conclusion}
+
+	\begin{appendices}
+	\section{Map data structures}
+	\label{appendix:mapdatastructures}
+	\input{sections/appendices/map-data-structures.tex}
+	\end {appendices}
 
 	\bibliographystyle{plain}
 	\bibliography{bibliography}

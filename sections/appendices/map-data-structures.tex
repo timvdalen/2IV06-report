@@ -1,0 +1,45 @@
+\paragraph{Center} has the following properties:
+
+\begin{itemize}
+	\item Vec2 point
+	\item bool water
+	\item bool ocean
+	\item bool coast
+	\item bool border
+	\item float elevation
+	\item float moisture
+	\item Biome biome
+	\item Center[] neighbours
+	\item Edge[] borders
+	\item Corner[] corners
+\end{itemize}
+
+\paragraph{Corner} has the following properties:
+
+\begin{itemize}
+	\item Vec2 point
+	\item bool water
+	\item bool ocean
+	\item bool coast
+	\item bool border
+	\item float elevation
+	\item float moisture
+	\item int river
+	\item int watershed\_size
+	\item Corner downslope
+	\item Corner watershed
+	\item Center[] touches
+	\item Edge[] protrudes
+	\item Corner[] adjacent
+\end{itemize}
+
+\paragraph{Edge} has the following properties:
+
+\begin{itemize}
+	\item Center delaunay0
+	\item Center delaunay1
+	\item Corner voronoi0
+	\item Corner voronoi1
+	\item int river
+	\item Vec2 midway\_point
+\end{itemize}
