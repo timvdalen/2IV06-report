@@ -1,5 +1,8 @@
 %motivation of choices made
 
+\subsection{Map file format}
+When exporting our maps from the generator, all data remains intact. When importing the data structures that were present after generation are all restored. Alternatively we could have either put the data in a more commonly used format or we could have generated the geometry and merely exported that as an object file. The first alternative would in our case have unnecessarily complicated serialisation and deserialisation. The second alternative would have meant discarding much of the additional information concerning biomes and other intermediate data which could be interesting when the generated data is used in interactive applications.
+
 \subsection{Terrain visualisation}
 Within the limited time frame we chose to give rivers a geometric representation and focus on that instead of using texturing to indicate water. This posed interesting and tangible problems for us to solve while simultaniously turning out to be very challenging. Texturing the terrain appropriately posed other problems as the irregular polygon assignments made it very difficult to have the textures look seamless. Therefor the project does contain some code dealing with texturing but we decided to simply use biome appropriate coloring.
 
