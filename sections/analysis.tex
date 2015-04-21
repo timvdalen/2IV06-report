@@ -258,6 +258,52 @@ Algorithm~\ref{alg:biome} gives an impression of how this could happen, the real
 
 %TODO: Similar images for the next steps
 
+\subsection{Geometry generation}
+
+The geometry of the map is generated preceding the visualisation phase. The maps are exported from the generator with all additional information intact to ensure their usefulness in all applications.
+
+The surface of the islands can be generated rather straight-forward. For each center in the map data we generate as many triangles as there are borders associated with that center. Each of these triangles are formed with the center as the first vertex and the associated border's corners as the other two vertices.
+
+\paragraph{Normal assignment}
+
+If we simply use normals that are actually perpendicular to these triangles, the visualised terrain will look very harsh. Each face will be obviously individually distinguishable. This can be solved by assigning the same normal vector to vertices that share the same position. 
+Our normal buffers can be constructed using a set of vertices and the normals will be calculated. Depending on whether or not smoothing is set to true or false normal vectors will be modified and set to the average x, y and z values of all normal vectors associated with vertices sharing the same position vector.
+
+This 'smoothing' process takes an exponential amount of time when the number of input vectors is increased. Passing all generated triangles as one object resulted in this smooth normal calculation taking a very large amount of time when generating geometry for maps of significant size.
+
+Fortunately we know that only a subset of generated vertices can share positions due to the fact that we know which centers are adjacent to eachother. Therefor we kept the vertices in seperate vertex buffers. In addition, we created an additional method to construct normals for a set of vertices while considering the set of vertices and associated normals that might affect what the smoothed normal values should be. This set consists of the vertices that are generated from the adjacent centers. 
+
+\paragraph{River geometry}
+
+To acquire more interesting geometry for our generated maps we decided to attempt to give the randomly assigned rivers a three-dimensional representation. We considered two main approaches, each with their individual challenges. Both methods basicly lower the geometric representation for any border that is part of a river and subsequently calculate a representation of the river bed depending on the river width at that point. This varying width showcases the underlying realistic representation of rivers very nicely. Simultaniously, it is the root of all problems concerning generation of a three-dimensional representation.
+
+First off, it seemed logical to simply run through the centers as we had done previously, check which borders are part of a river and provide half of the river bed geometry based on that information. This would be the most elegant solution but it posed some problems in that there is no information on the river further up- or downstream. Figure ~\ref{riverproblem1} shows an instance where this method can run into trouble connecting river sections.
+
+A solution to this problem and our second approach was to construct a tree of corners as nodes and river borders as edges for each of the existing rivers. Then we can start at the mouth of the river and work our way up. This way we have all the information we need to properly connect river sections of varying widths. Sadly this approach posed a new problem ~\ref{riverproblem2} which we did not previously experience due to the fact that we were processing each junction of river sections seperately. To solve this we needed elements from our first approach. 
+
+Both approaches run into trouble ~\ref{riverproblem3} when the generated terrain contains very small cells and/or small borders. Irregular terrain can also result in the intersections of the river banks (parallels to the river edges) being very unpredictable, in our case this lead to a very spiky representation of the rivers in larger maps where there were bound to be some irregularities. The most reasonable solution to this problem was to guarantee more regular maps.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{mismatchedriverwidth}
+	\caption{When we do not consider connecting river sections the generated geometry may not connect properly}
+	\label{riverproblem1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{obsoleteintersections}
+	\caption{Some small borders may need to be disregarded when deciding where the river banks should connect, this can not be done on a junction to junction basis}
+	\label{riverproblem2}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{outofpolygonintersections}
+	\caption{Considering the possibility that the width of the river could cover an entire polygon makes the problem infinitely more complex}
+	\label{riverproblem3}
+\end{figure}
+
 \subsection{System design}
 
 Using wxWidgets we set up a window with the necessary controls to modify parameters with which to generate maps and export them. Within this window we will be using OpenGL to visualize the generation process and provide the user with an idea of what the map might look like in the viewer application.
